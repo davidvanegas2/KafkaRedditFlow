@@ -1,0 +1,11 @@
+[project]
+name = "kafkatweetflow"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "kafka>=1.3.5",
+    "praw>=7.8.1",
+    "ruff>=0.7.2",
+]
