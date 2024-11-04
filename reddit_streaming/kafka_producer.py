@@ -1,7 +1,7 @@
 """Module to produce messages to a Kafka topic."""
-import kafka
+from kafka import KafkaProducer
 
-class KafkaProducer:
+class KafkaMessageProducer:
     """Class to produce messages to a Kafka topic"""
 
     def __init__(self, bootstrap_servers: str, topic: str):
@@ -13,7 +13,7 @@ class KafkaProducer:
         """
         self.bootstrap_servers = bootstrap_servers
         self.topic = topic
-        self.producer = kafka.KafkaProducer(bootstrap_servers=bootstrap_servers)
+        self.producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
 
     def produce_message(self, message: str):
         """Produce a message to the Kafka topic.

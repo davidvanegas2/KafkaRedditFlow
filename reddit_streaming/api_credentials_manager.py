@@ -34,6 +34,6 @@ class APICredentialsManager:
         """Read API credentials from a JSON file."""
         with open(filename, 'r') as file:
             data = json.load(file)
-            self.client_id = data.get('client_id')
-            self.client_secret = data.get('client_secret')
-            self.user_agent = data.get('user_agent')
+            self.client_id = data.get('REDDIT_CLIENT_ID')
+            self.client_secret = data.get('REDDIT_CLIENT_SECRET')
+            self.user_agent = data.get('REDDIT_USER_AGENT')
