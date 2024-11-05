@@ -44,7 +44,7 @@ class RedditClient:
         )
 
     def fetch_posts(self, subreddit_name: str='all', limit: int=10) -> list[RedditPost]:
-        """Fetch the latest posts from a subreddit and return them as a list of dictionaries.
+        """Fetch the latest posts from a subreddit and return them as a list of RedditPost objects.
 
         Args:
             subreddit_name (str): The name of the subreddit to fetch posts from. Default is 'all'.
