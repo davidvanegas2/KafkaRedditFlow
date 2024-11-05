@@ -8,7 +8,7 @@ def main():
     """Main entry point of the program."""
     # Read API credentials from a JSON file
     credentials_manager = APICredentialsManager()
-    credentials_manager.read_from_json('reddit_credentials.json')
+    credentials_manager.read_from_env()
 
     # Initialize the Reddit client
     reddit_client = RedditClient(credentials_manager)

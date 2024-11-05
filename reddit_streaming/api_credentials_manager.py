@@ -1,6 +1,7 @@
 """Classes to interact with the Reddit API and fetch posts from a subreddit."""
 
-import json
+import os
+from dotenv import load_dotenv
 
 
 class APICredentialsManager:
@@ -30,10 +31,9 @@ class APICredentialsManager:
         """Return the user agent."""
         return self.user_agent
 
-    def read_from_json(self, filename: str):
-        """Read API credentials from a JSON file."""
-        with open(filename, 'r') as file:
-            data = json.load(file)
-            self.client_id = data.get('REDDIT_CLIENT_ID')
-            self.client_secret = data.get('REDDIT_CLIENT_SECRET')
-            self.user_agent = data.get('REDDIT_USER_AGENT')
+    def read_from_env(self):
+        """Read API credentials from environment variables."""
+        load_dotenv()
+        self.client_id = os.getenv('REDDIT_CLIENT_ID')
+        self.client_secret = os.getenv('REDDIT_CLIENT_SECRET')
+        self.user_agent = os.getenv('REDDIT_USER_AGENT')
