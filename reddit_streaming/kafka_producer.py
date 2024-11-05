@@ -31,3 +31,26 @@ class KafkaMessageProducer:
         """Close the Kafka producer."""
         self.flush()
         self.producer.close()
+
+class MockProducer:
+    """Mock class to simulate a Kafka producer for testing purposes."""
+
+    def __init__(self, bootstrap_servers: str, topic: str):
+        """Initialize the mock producer."""
+        pass
+
+    def produce_message(self, message: str) -> None:
+        """Simulate producing a message.
+
+        Args:
+            message (str): The message to produce.
+        """
+        print(f"[MOCK PRODUCER] Producing message: {message}")
+
+    def flush(self) -> None:
+        """Simulate flushing the producer."""
+        print("[MOCK PRODUCER] Flushing producer")
+
+    def close(self) -> None:
+        """Simulate closing the producer."""
+        print("[MOCK PRODUCER] Closing producer")

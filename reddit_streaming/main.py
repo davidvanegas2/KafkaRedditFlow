@@ -2,10 +2,43 @@
 import argparse
 import json
 from dataclasses import asdict
+from threading import Thread
+import time
+from typing import Union
 
 from reddit_streaming.api_credentials_manager import APICredentialsManager
 from reddit_streaming.reddit_client import RedditClient
-from reddit_streaming.kafka_producer import KafkaMessageProducer
+from reddit_streaming.kafka_producer import KafkaMessageProducer, MockProducer
+
+
+def produce_messages(
+        subreddit: str,
+        limit: int,
+        interval: int,
+        reddit_client: RedditClient,
+        producer: Union[KafkaMessageProducer, MockProducer]
+):
+    """Producer function to fetch posts from a subreddit and produce them to a Kafka topic.
+
+    Args:
+        subreddit (str): The subreddit to fetch posts from.
+        limit (int): The number of posts to fetch.
+        interval (int): The interval in seconds to wait between producing messages.
+        reddit_client (RedditClient): The Reddit client instance.
+        producer (KafkaMessageProducer): The Kafka producer instance.
+    """
+
+    while True:
+        posts = reddit_client.fetch_posts(subreddit_name=subreddit, limit=limit)
+
+        for post in posts:
+            json_post = json.dumps(asdict(post))
+            producer.produce_message(json_post)
+
+        # Flush and close the Kafka producer
+        producer.close()
+
+        time.sleep(interval)
 
 def main(
         subreddit: str,
@@ -16,6 +49,8 @@ def main(
         client_secret: str,
         user_agent: str,
         dry_run: bool = False,
+        num_producers: int = 1,
+        interval: int = 60
 ):
     """Main entry point of the program.
 
@@ -28,6 +63,8 @@ def main(
         client_secret (str): The client secret for the Reddit API.
         user_agent (str): The user agent for the Reddit API.
         dry_run (bool): Whether to run the program in dry-run mode.
+        num_producers (int): The number of producers to simulate.
+        interval (int): The interval in seconds to wait between producing messages.
     """
     # Read API credentials from a JSON file
     credentials_manager = APICredentialsManager(client_id=client_id, client_secret=client_secret, user_agent=user_agent)
@@ -37,23 +74,23 @@ def main(
     reddit_client = RedditClient(credentials_manager)
     reddit_client.authenticate()
 
-    # Fetch the latest posts from the 'python' subreddit
-    posts = reddit_client.fetch_posts(subreddit_name=subreddit, limit=limit)
+    # Choose the appropriate producer
+    producer_class = MockProducer if dry_run else KafkaMessageProducer
+    producer = producer_class(bootstrap_servers=bootstrap_servers, topic=topic)
 
-    if dry_run:
-        for post in posts:
-            print(f"[DRY RUN] {post}")
-    else:
-        # Initialize the Kafka producer
-        kafka_producer = KafkaMessageProducer(bootstrap_servers=bootstrap_servers, topic=topic)
+    # Create and start producer threads
+    producer_threads = []
+    for _ in range(num_producers):
+        producer_thread = Thread(
+            target=produce_messages,
+            args=(subreddit, limit, interval, reddit_client, producer)
+        )
+        producer_thread.start()
+        producer_threads.append(producer_thread)
 
-        # Produce each post to the Kafka topic
-        for post in posts:
-            json_post = json.dumps(asdict(post))
-            kafka_producer.produce_message(json_post)
-
-        # Flush and close the Kafka producer
-        kafka_producer.close()
+    # Wait for all threads to complete
+    for producer_thread in producer_threads:
+        producer_thread.join()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Reddit Streaming Application')
@@ -65,6 +102,8 @@ if __name__ == "__main__":
     parser.add_argument('--client-secret', type=str, help='The client secret for the Reddit API')
     parser.add_argument('--user-agent', type=str, help='The user agent for the Reddit API')
     parser.add_argument('--dry-run', action='store_true', help='Run the program in dry-run mode')
+    parser.add_argument('--num-producers', type=int, default=1, help='The number of producers to simulate')
+    parser.add_argument('--interval', type=int, default=60, help='The interval in seconds to wait between producing messages')
 
     args = parser.parse_args()
 
@@ -76,5 +115,7 @@ if __name__ == "__main__":
         client_id=args.client_id,
         client_secret=args.client_secret,
         user_agent=args.user_agent,
-        dry_run=args.dry_run
+        dry_run=args.dry_run,
+        num_producers=args.num_producers,
+        interval=args.interval
     )
