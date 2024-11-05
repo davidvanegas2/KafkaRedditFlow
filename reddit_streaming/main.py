@@ -2,7 +2,7 @@
 
 from reddit_streaming.api_credentials_manager import APICredentialsManager
 from reddit_streaming.reddit_client import RedditClient
-from reddit_streaming.kafka_producer import KafkaProducer
+from reddit_streaming.kafka_producer import KafkaMessageProducer
 
 def main():
     """Main entry point of the program."""
@@ -15,7 +15,7 @@ def main():
     reddit_client.authenticate()
 
     # Initialize the Kafka producer
-    kafka_producer = KafkaProducer(bootstrap_servers='localhost:9092', topic='reddit_posts')
+    kafka_producer = KafkaMessageProducer(bootstrap_servers='localhost:9092', topic='reddit_posts')
 
     # Fetch the latest posts from the 'python' subreddit
     posts = reddit_client.fetch_posts(subreddit_name='python', limit=10)
