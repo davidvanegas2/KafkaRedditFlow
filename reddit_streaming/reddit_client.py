@@ -1,10 +1,13 @@
 """Module to interact with the Reddit API using the PRAW library."""
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
+import logging
 
 import praw
 
 from reddit_streaming.api_credentials_manager import APICredentialsManager
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -46,6 +49,7 @@ class RedditClient:
             client_secret=self.credentials_manager.get_client_secret(),
             user_agent=self.credentials_manager.get_user_agent()
         )
+        logger.info("Authenticated Reddit client")
 
     def fetch_posts(self, subreddit_name: str='all', limit: int=10) -> list[RedditPost]:
         """Fetch the latest posts from a subreddit and return them as a list of RedditPost objects.
@@ -58,6 +62,7 @@ class RedditClient:
             list: A list of dictionaries containing post data.
         """
         if not self.reddit:
+            logger.error("Reddit client is not authenticated. Please call authenticate() first.")
             raise Exception("Reddit client is not authenticated. Please call authenticate() first.")
 
         posts = []
@@ -76,5 +81,6 @@ class RedditClient:
                 )
                 posts.append(post_data)
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.exception(f"An error occurred while fetching posts from subreddit '{subreddit_name}': {e}")
+            raise Exception from e
         return posts

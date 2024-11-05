@@ -1,13 +1,31 @@
 """Main module of the program."""
 import argparse
 import json
+import logging
 from threading import Thread
 import time
 from typing import Union
 
-from reddit_streaming.api_credentials_manager import APICredentialsManager
+from reddit_streaming.api_credentials_manager import APICredentialsManager, logger
 from reddit_streaming.reddit_client import RedditClient
 from reddit_streaming.kafka_producer import KafkaMessageProducer, MockProducer
+
+
+def configure_logging(dry_run: bool = False):
+    """Set up logging configuration.
+
+    Args:
+        dry_run (bool): Whether to run the program in dry-run
+    """
+    level = logging.DEBUG if dry_run else logging.INFO
+    logging.basicConfig(
+        level=level,  # Change this to logging.DEBUG for more verbose logs
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.StreamHandler(),  # Send logs to stdout
+        ]
+    )
+    logging.info("Logging configured successfully")
 
 
 def produce_messages(
@@ -65,6 +83,9 @@ def main(
         num_producers (int): The number of producers to simulate.
         interval (int): The interval in seconds to wait between producing messages.
     """
+    configure_logging(dry_run)
+    logger.info("Starting Reddit Streaming Application")
+
     # Read API credentials from a JSON file
     credentials_manager = APICredentialsManager(client_id=client_id, client_secret=client_secret, user_agent=user_agent)
     credentials_manager.read_from_env()

@@ -1,5 +1,9 @@
 """Module to produce messages to a Kafka topic."""
+import logging
+
 from kafka import KafkaProducer
+
+logger = logging.getLogger(__name__)
 
 class KafkaMessageProducer:
     """Class to produce messages to a Kafka topic"""
@@ -22,6 +26,7 @@ class KafkaMessageProducer:
             message (str): The message to produce.
         """
         self.producer.send(self.topic, message.encode('utf-8'))
+        logger.debug(f"Produced message to topic {self.topic}: {message}")
 
     def flush(self):
         """Flush any pending messages in the Kafka producer."""
@@ -31,6 +36,7 @@ class KafkaMessageProducer:
         """Close the Kafka producer."""
         self.flush()
         self.producer.close()
+        logger.info("Closed Kafka producer")
 
 class MockProducer:
     """Mock class to simulate a Kafka producer for testing purposes."""
@@ -45,12 +51,12 @@ class MockProducer:
         Args:
             message (str): The message to produce.
         """
-        print(f"[MOCK PRODUCER] Producing message: {message}")
+        logger.debug(f"[MOCK PRODUCER] Producing message: {message}")
 
     def flush(self) -> None:
         """Simulate flushing the producer."""
-        print("[MOCK PRODUCER] Flushing producer")
+        logger.debug("[MOCK PRODUCER] Flushing producer")
 
     def close(self) -> None:
         """Simulate closing the producer."""
-        print("[MOCK PRODUCER] Closing producer")
+        logger.debug("[MOCK PRODUCER] Closing producer")

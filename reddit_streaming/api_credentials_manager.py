@@ -1,8 +1,10 @@
 """Classes to interact with the Reddit API and fetch posts from a subreddit."""
 
+import logging
 import os
 from dotenv import load_dotenv
 
+logger = logging.getLogger(__name__)
 
 class APICredentialsManager:
     """Class to manage API credentials for Reddit API."""
@@ -34,6 +36,7 @@ class APICredentialsManager:
     def read_from_env(self):
         """Read API credentials from environment variables."""
         if not self.client_id or not self.client_secret or not self.user_agent:
+            logger.info('Reading Reddit API credentials from environment variables')
             load_dotenv()
 
             self.client_id = os.getenv('REDDIT_CLIENT_ID')
@@ -41,4 +44,5 @@ class APICredentialsManager:
             self.user_agent = os.getenv('REDDIT_USER_AGENT')
 
             if not self.client_id or not self.client_secret or not self.user_agent:
+                logger.error('Reddit API credentials not found in environment variables')
                 raise ValueError('Reddit API credentials not found in environment variables')
