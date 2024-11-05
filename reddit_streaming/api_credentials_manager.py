@@ -33,7 +33,12 @@ class APICredentialsManager:
 
     def read_from_env(self):
         """Read API credentials from environment variables."""
-        load_dotenv()
-        self.client_id = os.getenv('REDDIT_CLIENT_ID')
-        self.client_secret = os.getenv('REDDIT_CLIENT_SECRET')
-        self.user_agent = os.getenv('REDDIT_USER_AGENT')
+        if not self.client_id or not self.client_secret or not self.user_agent:
+            load_dotenv()
+
+            self.client_id = os.getenv('REDDIT_CLIENT_ID')
+            self.client_secret = os.getenv('REDDIT_CLIENT_SECRET')
+            self.user_agent = os.getenv('REDDIT_USER_AGENT')
+
+            if not self.client_id or not self.client_secret or not self.user_agent:
+                raise ValueError('Reddit API credentials not found in environment variables')
