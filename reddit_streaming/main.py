@@ -1,5 +1,7 @@
 """Main module of the program."""
 import argparse
+import json
+from dataclasses import asdict
 
 from reddit_streaming.api_credentials_manager import APICredentialsManager
 from reddit_streaming.reddit_client import RedditClient
@@ -47,7 +49,8 @@ def main(
 
         # Produce each post to the Kafka topic
         for post in posts:
-            kafka_producer.produce_message(str(post))
+            json_post = json.dumps(asdict(post))
+            kafka_producer.produce_message(json_post)
 
         # Flush and close the Kafka producer
         kafka_producer.close()
