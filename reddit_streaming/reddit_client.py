@@ -1,5 +1,5 @@
 """Module to interact with the Reddit API using the PRAW library."""
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 
 import praw
@@ -22,6 +22,10 @@ class RedditPost:
     def created_utc_to_iso(self):
         """Convert the created_utc timestamp to an ISO-formatted string."""
         return datetime.fromtimestamp(self.created_utc, tz=timezone.utc).isoformat()
+
+    def to_dict(self):
+        """Convert the RedditPost instance to a dictionary."""
+        return asdict(self)
 
 class RedditClient:
     """Class to interact with the Reddit API."""

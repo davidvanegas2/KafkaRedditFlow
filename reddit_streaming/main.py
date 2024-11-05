@@ -1,7 +1,6 @@
 """Main module of the program."""
 import argparse
 import json
-from dataclasses import asdict
 from threading import Thread
 import time
 from typing import Union
@@ -32,7 +31,7 @@ def produce_messages(
         posts = reddit_client.fetch_posts(subreddit_name=subreddit, limit=limit)
 
         for post in posts:
-            json_post = json.dumps(asdict(post))
+            json_post = json.dumps(post.to_dict())
             producer.produce_message(json_post)
 
         # Flush and close the Kafka producer
