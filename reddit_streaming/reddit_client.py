@@ -1,8 +1,27 @@
 """Module to interact with the Reddit API using the PRAW library."""
+from dataclasses import dataclass
+from datetime import datetime, timezone
+
 import praw
 
 from reddit_streaming.api_credentials_manager import APICredentialsManager
 
+
+@dataclass
+class RedditPost:
+    """Data class to represent a Reddit post."""
+    id: str
+    title: str
+    author: str
+    subreddit: str
+    created_utc: float
+    url: str
+    score: int
+    num_comments: int
+
+    def created_utc_to_iso(self):
+        """Convert the created_utc timestamp to an ISO-formatted string."""
+        return datetime.fromtimestamp(self.created_utc, tz=timezone.utc).isoformat()
 
 class RedditClient:
     """Class to interact with the Reddit API."""
@@ -24,7 +43,7 @@ class RedditClient:
             user_agent=self.credentials_manager.get_user_agent()
         )
 
-    def fetch_posts(self, subreddit_name: str='all', limit: int=10):
+    def fetch_posts(self, subreddit_name: str='all', limit: int=10) -> list[RedditPost]:
         """Fetch the latest posts from a subreddit and return them as a list of dictionaries.
 
         Args:
@@ -41,16 +60,16 @@ class RedditClient:
         try:
             subreddit = self.reddit.subreddit(subreddit_name)
             for post in subreddit.new(limit=limit):
-                post_data = {
-                    'id': post.id,
-                    'title': post.title,
-                    'author': str(post.author),
-                    'subreddit': post.subreddit.display_name,
-                    'created_utc': post.created_utc,
-                    'url': post.url,
-                    'score': post.score,
-                    'num_comments': post.num_comments
-                }
+                post_data = RedditPost(
+                    id=post.id,
+                    title=post.title,
+                    author=str(post.author),
+                    subreddit=post.subreddit.display_name,
+                    created_utc=post.created_utc,
+                    url=post.url,
+                    score=post.score,
+                    num_comments=post.num_comments
+                )
                 posts.append(post_data)
         except Exception as e:
             print(f"An error occurred: {e}")
