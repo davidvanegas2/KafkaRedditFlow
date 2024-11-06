@@ -6,7 +6,7 @@ from threading import Thread
 import time
 from typing import Union
 
-from reddit_streaming.api_credentials_manager import APICredentialsManager, logger
+from reddit_streaming.api_credentials_manager import APICredentialsManager
 from reddit_streaming.reddit_client import RedditClient
 from reddit_streaming.kafka_producer import KafkaMessageProducer, MockProducer
 
