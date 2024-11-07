@@ -84,6 +84,7 @@ def main(
         interval (int): The interval in seconds to wait between producing messages.
     """
     configure_logging(dry_run)
+    logger = logging.getLogger(__name__)
     logger.info("Starting Reddit Streaming Application")
 
     # Read API credentials from a JSON file
