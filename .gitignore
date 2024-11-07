@@ -161,4 +161,28 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
+# Ignore local Terraform state files
+*.tfstate
+*.tfstate.backup
+
+# Ignore crash log files
+crash.log
+
+# Ignore extension files
+*.tfvars
+*.tfvars.json
+
+# Ignore core and provider-related files
+.terraform/
+
+# Ignore override files as they are intended to be local overrides
+override.tf
+override.tf.json
+
+# Ignore any files with sensitive information
+*.auto.tfvars
+
+# Ignore backup files
+*.backup
+
 /reddit_streaming/reddit_credentials.json
