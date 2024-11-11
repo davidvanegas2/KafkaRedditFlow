@@ -1,9 +1,18 @@
 """Module to produce messages to a Kafka topic."""
 import logging
 
-from kafka import KafkaProducer
+from confluent_kafka import Producer
 
 logger = logging.getLogger(__name__)
+
+
+def delivery_report(err: Exception, msg):
+    """ Called once for each message produced to indicate delivery result.
+        Triggered by poll() or flush(). """
+    if err is not None:
+        logger.error('Message delivery failed: {}'.format(err))
+    else:
+        logger.debug('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
 
 class KafkaMessageProducer:
     """Class to produce messages to a Kafka topic"""
@@ -15,9 +24,14 @@ class KafkaMessageProducer:
             bootstrap_servers (str): The list of Kafka brokers in the format 'host:port'.
             topic (str): The name of the Kafka topic to produce messages to.
         """
+        config = {
+            "bootstrap.servers": bootstrap_servers,
+            # "security.protocol": "SSL",
+        }
+
         self.bootstrap_servers = bootstrap_servers
         self.topic = topic
-        self.producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
+        self.producer = Producer(config)
 
     def produce_message(self, message: str):
         """Produce a message to the Kafka topic.
@@ -25,7 +39,7 @@ class KafkaMessageProducer:
         Args:
             message (str): The message to produce.
         """
-        self.producer.send(self.topic, message.encode('utf-8'))
+        self.producer.produce(self.topic, message.encode('utf-8'), callback=delivery_report)
         logger.debug(f"Produced message to topic {self.topic}: {message}")
 
     def flush(self):
@@ -34,8 +48,8 @@ class KafkaMessageProducer:
 
     def close(self):
         """Close the Kafka producer."""
+        self.producer.poll(10000)
         self.flush()
-        self.producer.close()
         logger.info("Closed Kafka producer")
 
 class MockProducer:
