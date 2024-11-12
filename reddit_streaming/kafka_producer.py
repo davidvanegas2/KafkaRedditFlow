@@ -6,14 +6,6 @@ from confluent_kafka import Producer
 logger = logging.getLogger(__name__)
 
 
-def delivery_report(err: Exception, msg):
-    """ Called once for each message produced to indicate delivery result.
-        Triggered by poll() or flush(). """
-    if err is not None:
-        logger.error('Message delivery failed: {}'.format(err))
-    else:
-        logger.debug('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
-
 class KafkaMessageProducer:
     """Class to produce messages to a Kafka topic"""
 
@@ -33,14 +25,24 @@ class KafkaMessageProducer:
         self.topic = topic
         self.producer = Producer(config)
 
-    def produce_message(self, message: str):
-        """Produce a message to the Kafka topic.
+    def produce_message(self, message: str, retries: int = 3):
+        """Produce a message to the Kafka topic with retries.
 
         Args:
             message (str): The message to produce.
+            retries (int): The number of times to retry sending the message if it fails.
         """
-        self.producer.produce(self.topic, message.encode('utf-8'), callback=delivery_report)
-        logger.debug(f"Produced message to topic {self.topic}: {message}")
+        attempt = 0
+        while attempt <= retries:
+            try:
+                self.producer.produce(self.topic, message.encode('utf-8'))
+                logger.debug(f"Produced message to topic {self.topic}: {message}")
+                break
+            except Exception as e:
+                attempt += 1
+                logger.error(f"Failed to produce message: {e}. Attempt {attempt} of {retries}")
+                if attempt > retries:
+                    raise
 
     def flush(self):
         """Flush any pending messages in the Kafka producer."""
