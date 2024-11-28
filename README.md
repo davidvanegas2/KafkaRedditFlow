@@ -52,11 +52,11 @@ This repository not only demonstrates a functional example of building a modern 
 
 ### **Current status**
 
--   MSK configuration with Terraform.
--   Working producer with data from Reddit API.
--   Basic consumer in development.
--   Kinesis Firehose configuration for persistence in S3.
--   Comprehensive documentation of all steps and commands in Markdown to facilitate project replication.
+ - [x] MSK configuration with Terraform.
+ - [x] Working producer with data from Reddit API.
+ - [ ] Basic consumer in development.
+ - [ ] Kinesis Firehose configuration for persistence in S3.
+ - [ ] Comprehensive documentation of all steps and commands in Markdown to facilitate project replication.
 
 ----------
 
