@@ -1,4 +1,6 @@
 resource "aws_instance" "reddit_producer_instance" {
+  depends_on = [aws_msk_cluster.kafka_cluster]
+
   ami                    = "ami-066a7fbea5161f451"
   instance_type          = var.instance_type
   key_name               = var.key_pair_name

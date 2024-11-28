@@ -21,10 +21,19 @@ class RedditPost:
     url: str
     score: int
     num_comments: int
+    year: int = None
+    month: int = None
+    day: int = None
+
+    def __post_init__(self):
+        self.created_utc_to_iso()
 
     def created_utc_to_iso(self):
         """Convert the created_utc timestamp to an ISO-formatted string."""
-        return datetime.fromtimestamp(self.created_utc, tz=timezone.utc).isoformat()
+        dt = datetime.fromtimestamp(self.created_utc, tz=timezone.utc)
+        self.year = dt.year
+        self.month = dt.month
+        self.day = dt.day
 
     def to_dict(self):
         """Convert the RedditPost instance to a dictionary."""
