@@ -1,0 +1,107 @@
+{
+    "ClusterInfo": {
+        "BrokerNodeGroupInfo": {
+            "BrokerAZDistribution": "DEFAULT",
+            "ClientSubnets": [
+                "subnet-0a46ff03da84396de",
+                "subnet-06adbaaa20e134098"
+            ],
+            "InstanceType": "kafka.m7g.large",
+            "SecurityGroups": [
+                "sg-07b8ca10e0160d70f"
+            ],
+            "StorageInfo": {
+                "EbsStorageInfo": {
+                    "VolumeSize": 5
+                }
+            },
+            "ConnectivityInfo": {
+                "PublicAccess": {
+                    "Type": "DISABLED"
+                },
+                "VpcConnectivity": {
+                    "ClientAuthentication": {
+                        "Sasl": {
+                            "Scram": {
+                                "Enabled": false
+                            },
+                            "Iam": {
+                                "Enabled": true
+                            }
+                        },
+                        "Tls": {
+                            "Enabled": false
+                        }
+                    }
+                }
+            },
+            "ZoneIds": [
+                "usw2-az1",
+                "usw2-az2"
+            ]
+        },
+        "ClientAuthentication": {
+            "Sasl": {
+                "Scram": {
+                    "Enabled": true
+                },
+                "Iam": {
+                    "Enabled": true
+                }
+            },
+            "Unauthenticated": {
+                "Enabled": false
+            }
+        },
+        "ClusterArn": "arn:aws:kafka:us-west-2:719386081370:cluster/example-msk-cluster/a64f1c7b-28b3-4f15-8434-23438afeddef-7",
+        "ClusterName": "example-msk-cluster",
+        "CreationTime": "2024-11-13T17:01:24.074000+00:00",
+        "CurrentBrokerSoftwareInfo": {
+            "ConfigurationArn": "arn:aws:kafka:us-west-2:719386081370:configuration/msk-configuration/d531d4cc-6df3-46df-8b15-f653d572ea9b-7",
+            "ConfigurationRevision": 1,
+            "KafkaVersion": "3.5.1"
+        },
+        "CurrentVersion": "K27OOP63XLO9TI",
+        "EncryptionInfo": {
+            "EncryptionAtRest": {
+                "DataVolumeKMSKeyId": "arn:aws:kms:us-west-2:719386081370:key/1368f73a-3d8e-4f38-b0b7-b18fca677796"
+            },
+            "EncryptionInTransit": {
+                "ClientBroker": "TLS",
+                "InCluster": true
+            }
+        },
+        "EnhancedMonitoring": "DEFAULT",
+        "OpenMonitoring": {
+            "Prometheus": {
+                "JmxExporter": {
+                    "EnabledInBroker": false
+                },
+                "NodeExporter": {
+                    "EnabledInBroker": false
+                }
+            }
+        },
+        "LoggingInfo": {
+            "BrokerLogs": {
+                "CloudWatchLogs": {
+                    "Enabled": false
+                },
+                "Firehose": {
+                    "Enabled": false
+                },
+                "S3": {
+                    "Enabled": false
+                }
+            }
+        },
+        "NumberOfBrokerNodes": 2,
+        "State": "ACTIVE",
+        "Tags": {
+            "Name": "example-msk-cluster"
+        },
+        "ZookeeperConnectString": "z-2.examplemskcluster.n9fs1w.c7.kafka.us-west-2.amazonaws.com:2181,z-1.examplemskcluster.n9fs1w.c7.kafka.us-west-2.amazonaws.com:2181,z-3.examplemskcluster.n9fs1w.c7.kafka.us-west-2.amazonaws.com:2181",
+        "ZookeeperConnectStringTls": "z-2.examplemskcluster.n9fs1w.c7.kafka.us-west-2.amazonaws.com:2182,z-1.examplemskcluster.n9fs1w.c7.kafka.us-west-2.amazonaws.com:2182,z-3.examplemskcluster.n9fs1w.c7.kafka.us-west-2.amazonaws.com:2182",
+        "StorageMode": "LOCAL"
+    }
+}
