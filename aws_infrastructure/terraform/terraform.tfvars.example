@@ -1,0 +1,8 @@
+# Example terraform.tfvars file
+# Replace the placeholder values with your own configuration.
+
+key_pair_name  = "your_key_pair_name"
+my_ip          = "your_ip_address_in_cidr_format" # Example: "192.168.1.1/32"
+account_arn    = "arn:aws:iam::your_account_id:root"
+kafka_username = "your_kafka_username"
+kafka_password = "your_kafka_password"

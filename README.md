@@ -50,6 +50,27 @@ To deploy the infrastructure using Terraform, ensure that the following tools ar
 
 ----------
 
+### **Setting up Terraform variables**
+
+To configure the necessary variables for Terraform, you need to create a file named `terraform.tfvars`. This file is included in `.gitignore` to keep sensitive information secure. Use the provided `terraform.tfvars.example` file as a template.
+
+#### Steps:
+
+1. Copy the example file:
+   ```bash
+   cp terraform.tfvars.example terraform.tfvars
+   ```
+2. Open the `terraform.tfvars` file and replace the placeholder values with your actual configuration:
+   * key_pair_name: The name of your AWS key pair.
+   * my_ip: Your public IP address in CIDR format (e.g., 192.168.1.1/32).
+   * account_arn: The ARN of your AWS account.
+   * kafka_username: The username for the Kafka cluster.
+   * kafka_password: The password for the Kafka cluster. 
+
+3. Save the file. Terraform will automatically use the values in terraform.tfvars during deployment.
+
+----------
+
 ### **Why this project is important**
 
 This repository not only demonstrates a functional example of building a modern data pipeline but also highlights:
