@@ -1,4 +1,3 @@
-
 # **Kafka Data Pipeline Project**
 
 This personal project is a practical implementation of a **data pipeline** based on **Apache Kafka**, designed to showcase skills in **data engineering** and **Infrastructure as Code (IaC)**. The core idea is to capture, process, and store data efficiently using Kafka as the central platform for real-time data streaming.
@@ -36,6 +35,18 @@ Build a pipeline that:
 -   **Python** as the primary programming language.
 -   **Terraform** for infrastructure management.
 -   **GitHub Actions** (planned) to automate CI/CD processes.
+
+----------
+
+### **Dependencies**
+
+To deploy the infrastructure using Terraform, ensure that the following tools are installed and configured on your local machine:
+
+-   **Terraform**: For managing the infrastructure.
+-   **jq**: A lightweight and flexible command-line JSON processor, required for processing certain Terraform configurations. Install it using your system's package manager, e.g.:
+    -   For Debian/Ubuntu: `sudo apt install jq`
+    -   For macOS: `brew install jq`
+    -   For Windows: Use a package manager like Chocolatey or manually download the binary from the official [jq website](https://stedolan.github.io/jq/).
 
 ----------
 

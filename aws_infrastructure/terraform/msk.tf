@@ -95,44 +95,6 @@ resource "aws_msk_cluster" "kafka_cluster" {
   }
 }
 
-# resource "aws_msk_cluster_policy" "kafka_cluster_policy" {
-#   cluster_arn = aws_msk_cluster.kafka_cluster.arn
-#
-#   policy = jsonencode(
-#     {
-#       Version = "2012-10-17",
-#       Statement = [
-#         {
-#           Effect = "Allow",
-#           Principal = {
-#             AWS = "arn:aws:iam::719386081370:root"
-#           },
-#           Action = [
-#             "kafka:CreateVpcConnection",
-#             "kafka:GetBootstrapBrokers",
-#             "kafka:DescribeCluster",
-#             "kafka:DescribeClusterV2"
-#           ],
-#           Resource = aws_msk_cluster.kafka_cluster.arn
-#         },
-#         {
-#           Effect = "Allow",
-#           Principal = {
-#             Service = "firehose.amazonaws.com"
-#           },
-#           Action = [
-#             "kafka:CreateVpcConnection",
-#             "kafka:GetBootstrapBrokers",
-#             "kafka:DescribeCluster",
-#             "kafka:DescribeClusterV2"
-#           ],
-#           Resource = aws_msk_cluster.kafka_cluster.arn
-#         }
-#       ]
-#     }
-#   )
-# }
-
 resource "local_file" "kafka_policy" {
   content = templatefile("${path.module}/kafka_policy_template.json", {
     cluster_arn    = aws_msk_cluster.kafka_cluster.arn,
@@ -147,7 +109,6 @@ resource "null_resource" "kafka_cluster_policy" {
     command = <<EOT
       aws kafka put-cluster-policy \
         --cluster-arn ${aws_msk_cluster.kafka_cluster.arn} \
-        --current-version $(aws kafka get-cluster-policy --cluster-arn arn:aws:kafka:us-west-2:719386081370:cluster/example-msk-cluster/c61a0784-116d-40fd-8dc2-07498fcc32c4-7 | jq -r '.CurrentVersion') \
         --policy file://kafka_policy.json
     EOT
   }
