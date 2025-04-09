@@ -106,11 +106,22 @@ resource "local_file" "kafka_policy" {
 
 resource "null_resource" "kafka_cluster_policy" {
   provisioner "local-exec" {
-    command = <<EOT
-      aws kafka put-cluster-policy \
-        --cluster-arn ${aws_msk_cluster.kafka_cluster.arn} \
-        --policy file://kafka_policy.json
-    EOT
+    command = "aws kafka put-cluster-policy --cluster-arn ${aws_msk_cluster.kafka_cluster.arn} --policy file://${path.module}/kafka_policy.json"
   }
   depends_on = [local_file.kafka_policy, aws_msk_cluster.kafka_cluster]
 }
+
+
+resource "aws_msk_vpc_connection" "firehose_connection" {
+  authentication = "SASL_IAM"
+  client_subnets = [
+    aws_subnet.msk_subnet_1.id,
+    aws_subnet.msk_subnet_2.id
+  ]
+  security_groups = [
+    aws_security_group.msk_sg.id
+  ]
+  target_cluster_arn = aws_msk_cluster.kafka_cluster.arn
+  vpc_id             = aws_vpc.msk_vpc.id
+}
+
