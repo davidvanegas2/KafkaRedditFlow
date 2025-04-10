@@ -1,3 +1,8 @@
+resource "aws_iam_instance_profile" "ec2_kafka_producer_profile" {
+  name = "ec2-kafka-producer-profile"
+  role = aws_iam_role.ec2_kafka_producer_role.name
+}
+
 resource "aws_instance" "reddit_producer_instance" {
   depends_on = [aws_msk_cluster.kafka_cluster]
 
@@ -19,4 +24,6 @@ resource "aws_instance" "reddit_producer_instance" {
               curl -LsSf https://astral.sh/uv/install.sh | sh
               source $HOME/.cargo/env
               EOF
+
+  iam_instance_profile = aws_iam_instance_profile.ec2_kafka_producer_profile.name
 }

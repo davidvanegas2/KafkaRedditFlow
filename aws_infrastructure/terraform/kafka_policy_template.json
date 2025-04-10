@@ -4,15 +4,12 @@
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "${aws_account_id}"
+        "AWS": "${ec2_role_arn}"
       },
       "Action": [
-        "kafka:CreateVpcConnection",
-        "kafka:GetBootstrapBrokers",
-        "kafka:DescribeCluster",
-        "kafka:DescribeClusterV2"
+        "kafka-cluster:*"
       ],
-      "Resource": "${cluster_arn}"
+      "Resource": "*"
     },
     {
       "Effect": "Allow",
@@ -20,10 +17,7 @@
         "Service": "firehose.amazonaws.com"
       },
       "Action": [
-        "kafka:CreateVpcConnection",
-        "kafka:GetBootstrapBrokers",
-        "kafka:DescribeCluster",
-        "kafka:DescribeClusterV2"
+        "kafka-cluster:*"
       ],
       "Resource": "${cluster_arn}"
     }
