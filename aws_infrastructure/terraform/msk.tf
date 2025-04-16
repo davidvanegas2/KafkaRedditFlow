@@ -56,6 +56,7 @@ resource "aws_msk_cluster" "kafka_cluster" {
       iam   = true
       scram = false
     }
+    unauthenticated = true
   }
 
   configuration_info {
@@ -97,7 +98,7 @@ resource "aws_msk_cluster" "kafka_cluster" {
 
 resource "local_file" "kafka_policy" {
   content = templatefile("${path.module}/kafka_policy_template.json", {
-    cluster_arn    = aws_msk_cluster.kafka_cluster.arn,
+    cluster_arn  = aws_msk_cluster.kafka_cluster.arn,
     ec2_role_arn = aws_iam_role.ec2_kafka_producer_role.arn
   })
   filename = "${path.module}/kafka_policy.json"

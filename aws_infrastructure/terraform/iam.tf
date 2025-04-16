@@ -69,11 +69,11 @@ resource "aws_iam_role_policy" "ec2_kafka_msk_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        "Effect": "Allow",
-        "Action": [
+        "Effect" : "Allow",
+        "Action" : [
           "kafka-cluster:*"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
         Effect = "Allow",

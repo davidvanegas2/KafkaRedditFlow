@@ -17,7 +17,8 @@
         "Service": "firehose.amazonaws.com"
       },
       "Action": [
-        "kafka-cluster:*"
+        "kafka-cluster:*",
+        "kafka:*"
       ],
       "Resource": "${cluster_arn}"
     }

@@ -18,7 +18,7 @@ class KafkaMessageProducer:
         """
         config = {
             "bootstrap.servers": bootstrap_servers,
-            # "security.protocol": "SSL",
+            "security.protocol": "SSL",
         }
 
         self.bootstrap_servers = bootstrap_servers
